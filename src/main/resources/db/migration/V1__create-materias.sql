@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS materias (
+  `id_materias` BIGINT AUTO_INCREMENT NOT NULL,
+  `materia_nome` VARCHAR(45) UNIQUE NOT NULL,
+  PRIMARY KEY (`id_materias`));
+
+
+  INSERT INTO materias (materia_nome) VALUES("MATEMATICA"),("QUIMICA"),("PORTUGUES"),("FISICA"),("INGLES"),("HISTORIA"),("GEOGRAFIA"),("BIOLOGIA"),("FILOSOFIA"),("SOCIOLOGIA")
