@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("teste")
 public class TesteController {
 
-
-
-
     @GetMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity testeApi(){
+        return ResponseEntity.ok().body("");
+    }
+    @GetMapping("/token")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity testeApiToken(){
         return ResponseEntity.ok().body("");
     }
 }

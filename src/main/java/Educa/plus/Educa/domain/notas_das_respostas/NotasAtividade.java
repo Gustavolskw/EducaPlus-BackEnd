@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.mapping.ToOne;
 
+import java.sql.Blob;
+
 @Entity
 @Table(name="atividade_feita_notas")
 @Getter

@@ -3,6 +3,7 @@ package Educa.plus.Educa.services;
 import Educa.plus.Educa.domain.materia.CadastroMateriaDTO;
 import Educa.plus.Educa.domain.materia.Materia;
 import Educa.plus.Educa.domain.materia.RespostaMateriasDTO;
+import Educa.plus.Educa.domain.usuario.Usuario;
 import Educa.plus.Educa.infra.exception.ExceptMessage;
 import Educa.plus.Educa.infra.resposnse.ResponseMessage;
 import Educa.plus.Educa.repositories.*;
@@ -24,6 +25,8 @@ public class MateriaServices {
 
     @Autowired
     private ConteudoExtraRepository conteudoExtraRepository;
+    @Autowired
+    private UserRepository userRepository;
     
 
     public ResponseEntity adicionaMateria(CadastroMateriaDTO data) {
@@ -81,5 +84,14 @@ public class MateriaServices {
         List<Materia> listaMateriasComNotas = materiaRepository.buscarMateriasQueTenhamNotas();
         if(listaMateriasComNotas.isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não tem Materias com Notas Postadas!"));
         return ResponseEntity.ok().body(listaMateriasComNotas.stream().map(RespostaMateriasDTO::new));
+    }
+
+    public ResponseEntity getMateriaPorUserId(Long userId) {
+        if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Usuarios"));
+        if(userRepository.findById(userId).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existe Usuario com esse Id"));
+        if(materiaRepository.findAll().isEmpty())if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Materias"));
+        Usuario user = userRepository.getReferenceById(userId);
+        Materia materiaEncontrada = materiaRepository.getReferenceById(user.getMateria().getIdMaterias());
+        return ResponseEntity.ok().body(new RespostaMateriasDTO(materiaEncontrada));
     }
 }

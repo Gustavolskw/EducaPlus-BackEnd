@@ -38,11 +38,13 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.POST, "newUser/register").permitAll();
                     req.requestMatchers(HttpMethod.POST, "auth/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "auth/register").permitAll();
+                    req.requestMatchers( "/v3/api-docs/**","/swagger-ui.html","/swagger-ui/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/materia/add").hasRole("ADMIN");
                     //req.requestMatchers(HttpMethod.GET, "newUser/analise/list").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.POST, "newUser/analise/aprove/{id}").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.DELETE, "newUser/analise/remove/{id}").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "materia/all").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "teste/token").authenticated();
                     //req.requestMatchers(HttpMethod.POST, "conteudo/extra/add").hasRole("STAFF");
                     req.requestMatchers(HttpMethod.DELETE, "conteudo/extra/remove/{id}").hasRole("STAFF");
                     req.requestMatchers(HttpMethod.PUT, "conteudo/extra/update").hasRole("STAFF");

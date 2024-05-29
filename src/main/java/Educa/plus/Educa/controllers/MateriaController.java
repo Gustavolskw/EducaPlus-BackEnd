@@ -32,6 +32,11 @@ public class MateriaController {
     public ResponseEntity seeAllMaterias(@PathVariable String nome ){
         return materiaServices.getMateriaPorNome(nome);
     }
+    @GetMapping("/user/{userId}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity getMateriaByUserId(@PathVariable Long userId ){
+        return materiaServices.getMateriaPorUserId(userId);
+    }
 
     @GetMapping("/atividade")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
