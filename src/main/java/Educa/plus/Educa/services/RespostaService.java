@@ -1,6 +1,7 @@
 package Educa.plus.Educa.services;
 
 import Educa.plus.Educa.domain.atividades.Atividades;
+import Educa.plus.Educa.domain.materia.Materia;
 import Educa.plus.Educa.domain.resolucao_atividade.CadastroDeRespostaDTO;
 import Educa.plus.Educa.domain.resolucao_atividade.RespostaAtividade;
 import Educa.plus.Educa.domain.resolucao_atividade.RespostaResponseDTO;
@@ -57,5 +58,18 @@ public class RespostaService {
     }
 
 
+    public ResponseEntity ShowAllRespostas() {
+        if(respostaRepository.findAll().isEmpty())return ResponseEntity.status(404).body(new ExceptMessage("Nao foi encontrada nenhuma resposta para atividades!"));
 
+        List<RespostaResponseDTO> todasRespostasDasAtividades = respostaRepository.buscarTodasRespostasSemNota().stream().map(RespostaResponseDTO::new).toList();
+        return ResponseEntity.ok().body(todasRespostasDasAtividades);
+    }
+
+    public ResponseEntity ShowAllRespostasForProfessorId(Long professorId) {
+        if(userRepository.findById(professorId).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("professor nao existe!"));
+        Usuario user = userRepository.getReferenceById(professorId);
+        if(user.getMateria().getIdMaterias() == null)return ResponseEntity.badRequest().body(new ExceptMessage("professor nao possui materia atrealada!"));
+        List<RespostaResponseDTO> listaNotasDoProfessor = respostaRepository.buscaAtividadesDoProfessor(user.getMateria().getIdMaterias()).stream().map(RespostaResponseDTO::new).toList();
+        return ResponseEntity.ok().body(listaNotasDoProfessor);
+    }
 }

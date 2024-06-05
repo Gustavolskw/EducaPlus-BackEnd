@@ -26,6 +26,11 @@ public class NotaController {
     public ResponseEntity showNotasByAlunoId(@PathVariable Long userId){
     return notasServices.showAllNotasByUser(userId);
     }
+    @GetMapping("/materia/{materia}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity showAllNotasByProfessorMateria(@PathVariable String materia){
+        return notasServices.showAllNotasByProfessorMateria(materia);
+    }
 
     @PostMapping("/add/{respostaId}")
     @Transactional

@@ -8,10 +8,7 @@ import Educa.plus.Educa.domain.usuario.UserRole;
 import Educa.plus.Educa.domain.usuario.Usuario;
 import Educa.plus.Educa.infra.exception.ExceptMessage;
 import Educa.plus.Educa.infra.resposnse.ResponseMessage;
-import Educa.plus.Educa.repositories.AtividadesRepository;
-import Educa.plus.Educa.repositories.NotasRepository;
-import Educa.plus.Educa.repositories.RespostaRepository;
-import Educa.plus.Educa.repositories.UserRepository;
+import Educa.plus.Educa.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,6 +30,9 @@ public class NotasServices {
     @Autowired
     private NotasRepository notasRepository;
 
+    @Autowired
+    private MateriaRepository materiaRepository;
+
     public ResponseEntity postaNotaEmResposta(String idReposta, PostaNotaDTO data){
         if(respostaRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não ha respostas postadas!"));
         if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não ha usuarios cadastrados!"));
@@ -41,12 +41,13 @@ public class NotasServices {
         RespostaAtividade respostaDoAluno = respostaRepository.getReferenceById(idReposta);
         if(notasRepository.findAllByRespostaAtividade(respostaDoAluno).isPresent())return ResponseEntity.badRequest().body(new ExceptMessage("Resposta de Atividade ja foi avaliada!"));
         Usuario avaliador = userRepository.getReferenceById(data.avaliador());
+        if(avaliador.getMateria() != respostaDoAluno.getAtividade().getMateria()) return ResponseEntity.badRequest().body(new ExceptMessage("Avaliador Indicado não pretence a materia da atividade!"));
         if(avaliador.getRole()== UserRole.USER || avaliador.getRole()== UserRole.ADMIN )return ResponseEntity.badRequest().body(new ExceptMessage("Avaliador Indicado não é um professor"));
         NotasAtividade nota = new NotasAtividade(respostaDoAluno, data.nota(), avaliador);
 
         notasRepository.save(nota);
 
-        return ResponseEntity.ok().body(new ResponseMessage("Nota postada com scuesso!"));
+        return ResponseEntity.ok().body(new ResponseMessage("Nota postada com sucesso!"));
     }
 
     public ResponseEntity showAllNotasByUser(Long userId){
@@ -84,7 +85,10 @@ public class NotasServices {
     }
 
 
-
-
-
+    public ResponseEntity showAllNotasByProfessorMateria(String materia) {
+        if(materiaRepository.findByMateriaNomeLike(materia)==null)return ResponseEntity.badRequest().body(new ExceptMessage("Não Existe materia: "+materia));
+        if(notasRepository.encontreNotasPorMateria(materia).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Notas da materia: "+materia));
+        List<RespostaNotaDTO> listaDeNotasParaMateria = notasRepository.encontreNotasPorMateria(materia).stream().map(RespostaNotaDTO::new).toList();
+       return ResponseEntity.ok().body(listaDeNotasParaMateria);
+    }
 }

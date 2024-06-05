@@ -90,7 +90,9 @@ public class MateriaServices {
         if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Usuarios"));
         if(userRepository.findById(userId).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existe Usuario com esse Id"));
         if(materiaRepository.findAll().isEmpty())if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Materias"));
+
         Usuario user = userRepository.getReferenceById(userId);
+        if(user.getMateria() == null)return ResponseEntity.badRequest().body(new ExceptMessage("Usuario nao possui materias atreladas"));
         Materia materiaEncontrada = materiaRepository.getReferenceById(user.getMateria().getIdMaterias());
         return ResponseEntity.ok().body(new RespostaMateriasDTO(materiaEncontrada));
     }
