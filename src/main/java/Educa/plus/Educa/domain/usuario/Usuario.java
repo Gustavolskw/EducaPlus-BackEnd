@@ -29,6 +29,7 @@ public class Usuario implements UserDetails {
     @JoinColumn(name = "materias_id")
     @ManyToOne
     private Materia materia;
+    private Boolean ativo;
 
 
 
@@ -37,11 +38,16 @@ public class Usuario implements UserDetails {
         this.senha = senha;
         this.role = role;
         this.materia = materia;
+        this.ativo  = true;
     }
-    public void updateUser(String login, String novaSenha){
+    public void updateUser(String login, String novaSenha) {
         this.login = login;
         this.senha = novaSenha;
     }
+    public void desativaUser(){
+        this.ativo = false;
+    }
+
 
 
     @Override

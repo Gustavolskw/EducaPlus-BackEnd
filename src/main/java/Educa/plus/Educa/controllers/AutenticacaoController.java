@@ -8,6 +8,7 @@ import Educa.plus.Educa.infra.exception.ExceptMessage;
 import Educa.plus.Educa.infra.resposnse.ResponseMessage;
 import Educa.plus.Educa.infra.security.DadosTokenJWT;
 import Educa.plus.Educa.infra.security.TokenService;
+import Educa.plus.Educa.repositories.RespostaRepository;
 import Educa.plus.Educa.repositories.UserRepository;
 import Educa.plus.Educa.services.UserServices;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,11 +46,11 @@ public class AutenticacaoController {
     public ResponseEntity efetuarLoginUser(@RequestBody @Valid DadosAutenticacao dadosAutenticacaos) {
         if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Usuarios cadastrados!"));
         if(userRepository.findByLogin(dadosAutenticacaos.login())==null)return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Usuarios cadastrados com esse nome!"));
+        if(userRepository.buscaDisponibilidadeDoUsuario(dadosAutenticacaos.login()) == 0)return ResponseEntity.badRequest().body(new ExceptMessage("Usuario Inativado"));
         var Authenticationtoken = new UsernamePasswordAuthenticationToken(dadosAutenticacaos.login(),
                 dadosAutenticacaos.senha());
         Long userId = userServices.getUserId(dadosAutenticacaos);
         var authentication = manager.authenticate(Authenticationtoken);
-        System.out.println(authentication);
         var tokenJWT = tokenService.geradorToken((Usuario) authentication.getPrincipal());
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT, userId));
     }
@@ -67,9 +68,17 @@ public class AutenticacaoController {
         return userServices.AtualizaUsuario(dados);
     }
     @DeleteMapping("delete/{id}")
+    @Transactional
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity DeleteUser(@PathVariable @Valid Long  id){
         return userServices.DeltaUsuario(id);
+    }
+
+    @PostMapping("reativa/{id}")
+    @Transactional
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity reativaUser(@PathVariable @Valid Long  id){
+        return userServices.reativaUser(id);
     }
 
     @GetMapping("/usuarios")
@@ -77,10 +86,26 @@ public class AutenticacaoController {
     public ResponseEntity getAllusers(){
         return userServices.getAllUsers();
     }
+
     @GetMapping("/usuarios/{id}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity getUsersById(@PathVariable @Valid Long  id){
         return userServices.getUserById(id);
     }
+
+    /*@GetMapping("/usuarios/ativos")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity getAllusersAtivos(){
+        return userServices.getAllUsersAtivos();
+    }
+
+    @GetMapping("/usuarios/inativos")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity getAllusersInativos(){
+        return userServices.getAllUsersInativos();
+    }
+*/
+
+
 
 }

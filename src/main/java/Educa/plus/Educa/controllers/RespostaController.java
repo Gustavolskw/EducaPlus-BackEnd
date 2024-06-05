@@ -22,6 +22,16 @@ public class RespostaController {
     public ResponseEntity showAllRespostasFromAtividade(@PathVariable String idAtividade){
         return respostaService.ShowAllRespostaByAtividade(idAtividade);
     }
+    @GetMapping("/all")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity showAllRespostasFromAtividade(){
+        return respostaService.ShowAllRespostas();
+    }
+    @GetMapping("/prof/{professorId}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity showAllRespostasFromAtividadeByProfessor(@PathVariable @Valid Long professorId){
+        return respostaService.ShowAllRespostasForProfessorId(professorId);
+    }
 
     @PostMapping("/send/{idAtividade}")
     @Transactional

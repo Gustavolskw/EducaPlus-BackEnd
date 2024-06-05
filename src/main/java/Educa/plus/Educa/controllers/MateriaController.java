@@ -32,6 +32,7 @@ public class MateriaController {
     public ResponseEntity seeAllMaterias(@PathVariable String nome ){
         return materiaServices.getMateriaPorNome(nome);
     }
+
     @GetMapping("/user/{userId}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity getMateriaByUserId(@PathVariable Long userId ){
@@ -62,4 +63,7 @@ public class MateriaController {
     public ResponseEntity deletaMatria(@PathVariable Long idMateria){
         return materiaServices.deleteMateria(idMateria);
     }
+
+
+
 }
