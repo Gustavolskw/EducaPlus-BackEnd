@@ -124,10 +124,13 @@ public class AtividadesServices {
         var atividadeUpdated = atividadesRepository.getReferenceById(data.idAtividade());
 
         return ResponseEntity.ok().body(new RespostaAtividadeDTO(atividadeUpdated));
-
-
-
     }
+
+    public ResponseEntity buscaDataDasAtividades(){
+        List<DatasDTO> listaDeDatasDasAtividades = atividadesRepository.buscaDataOrdenandoPorDia().stream().map(DatasDTO::new).toList();
+        return ResponseEntity.ok().body(listaDeDatasDasAtividades);
+    }
+
 
 }
 

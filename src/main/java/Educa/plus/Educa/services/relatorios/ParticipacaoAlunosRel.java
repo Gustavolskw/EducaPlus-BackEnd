@@ -1,7 +1,6 @@
 package Educa.plus.Educa.services.relatorios;
 
-import Educa.plus.Educa.domain.feedbacks.RelatorioFeedBackDTO;
-import Educa.plus.Educa.domain.usuario.AlunosParticipationRelDTO;
+import Educa.plus.Educa.domain.usuario.RelatorioDeParticipacaoAlunos;
 import Educa.plus.Educa.repositories.UserRepository;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,7 +23,6 @@ public class ParticipacaoAlunosRel {
 
     public void writeTableDataForUsersRel(PdfPTable table) {
         List<Object[]> relatorioList = userRepository.listaDeParticipacao();
-
         for (Object[] row : relatorioList) {
             String login = (String) row[0];
             Object atividadesFeitas =  row[1];
@@ -31,7 +30,7 @@ public class ParticipacaoAlunosRel {
             Object totalAtividades = row[3];
             Object porcentAtividadeFeita = row[4];
 
-            AlunosParticipationRelDTO relatorio = new AlunosParticipationRelDTO(login, atividadesFeitas, materia, totalAtividades, porcentAtividadeFeita);
+            RelatorioDeParticipacaoAlunos relatorio = new RelatorioDeParticipacaoAlunos(login, atividadesFeitas, materia, totalAtividades, porcentAtividadeFeita);
 
             table.addCell(relatorio.getLogin()).setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(relatorio.getAtividadesFeitas().toString()).setHorizontalAlignment(Element.ALIGN_CENTER);

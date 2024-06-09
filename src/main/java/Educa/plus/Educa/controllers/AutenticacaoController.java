@@ -67,7 +67,7 @@ public class AutenticacaoController {
     public ResponseEntity updateUser(@RequestBody @Valid AtualizaUsuarioDTO dados){
         return userServices.AtualizaUsuario(dados);
     }
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("inativa/{id}")
     @Transactional
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity DeleteUser(@PathVariable @Valid Long  id){
@@ -92,19 +92,6 @@ public class AutenticacaoController {
     public ResponseEntity getUsersById(@PathVariable @Valid Long  id){
         return userServices.getUserById(id);
     }
-
-    /*@GetMapping("/usuarios/ativos")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity getAllusersAtivos(){
-        return userServices.getAllUsersAtivos();
-    }
-
-    @GetMapping("/usuarios/inativos")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity getAllusersInativos(){
-        return userServices.getAllUsersInativos();
-    }
-*/
 
 
 
