@@ -6,10 +6,14 @@ import Educa.plus.Educa.domain.usuario.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AtividadesRepository extends JpaRepository<Atividades, String> {
     List<Atividades>  findAllByMateria(Materia materia);
     @Query(nativeQuery = true, value = "SELECT DISTINCT materiax_id FROM atividades")
     List<Long> getAllMatriasidDistinct();
+
+@Query("SELECT DISTINCT a.data from Atividades a ORDER BY day(a.data)")
+    List<LocalDate>buscaDataOrdenandoPorDia();
 }

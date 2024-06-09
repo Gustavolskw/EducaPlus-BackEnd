@@ -1,6 +1,7 @@
 package Educa.plus.Educa.controllers;
 
 import Educa.plus.Educa.domain.atividades.CadastroAtividadeDTO;
+import Educa.plus.Educa.domain.atividades.DatasRecebeDTO;
 import Educa.plus.Educa.domain.atividades.UpdateAtividadeDTO;
 import Educa.plus.Educa.services.AtividadesServices;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,13 @@ public class AtividadeController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity showAll(){
         return atividadesServices.showAllAtividades();
+    }
+
+
+    @GetMapping("/datas")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity showDatas(){
+        return atividadesServices.buscaDataDasAtividades();
     }
 
     @GetMapping("/list/{id}")

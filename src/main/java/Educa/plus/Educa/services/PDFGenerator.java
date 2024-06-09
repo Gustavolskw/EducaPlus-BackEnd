@@ -1,8 +1,7 @@
 package Educa.plus.Educa.services;
 
-import Educa.plus.Educa.services.relatorios.FeedbackRel;
-import Educa.plus.Educa.services.relatorios.ParticipacaoAlunosRel;
-import Educa.plus.Educa.services.relatorios.UsersRel;
+import Educa.plus.Educa.domain.atividades.DatasRecebeDTO;
+import Educa.plus.Educa.services.relatorios.*;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.*;
@@ -22,9 +21,15 @@ public class PDFGenerator {
     private FeedbackRel feedbackRel;
 
     @Autowired
+    private NotasRelatorio notasRelatorio;
+
+    @Autowired
+    private PostProfessoresRelatorio postProfessoresRelatorio;
+
+    @Autowired
     private ParticipacaoAlunosRel participacaoAlunosRel;
 
-    private void mainHeader(Document document, PdfWriter writer){
+    private void mainHeader(Document document, PdfWriter writer) {
 
 
         Font fontTitle = FontFactory.getFont(FontFactory.TIMES_BOLD);
@@ -77,7 +82,6 @@ public class PDFGenerator {
             System.out.println(e.getMessage());
         }
     }
-
 
 
     public void relatorioDeFeedbacks(HttpServletResponse response) {
@@ -146,9 +150,78 @@ public class PDFGenerator {
         }
     }
 
+    public void relatorioDeNotaDosAlunos(HttpServletResponse response, DatasRecebeDTO datas) {
+        try {
+            Document document = new Document(PageSize.A4);
+            PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
+            document.open();
 
+            mainHeader(document, writer);
 
+            // Adicionando o subtítulo
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            font.setSize(18);
+            font.setColor(Color.BLUE);
+            Paragraph p = new Paragraph("Relatório de Nota dos Alunos por Materia", font);
+            p.setAlignment(Paragraph.ALIGN_CENTER);
+            document.add(p);
 
+            // Adicionando a tabela
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100f);
+            table.setWidths(new float[]{1.5f, 1.7f, 1.6f, 1.6f, 1.6f, 2f});
+            table.setSpacingBefore(10);
 
+            notasRelatorio.writeTableHeaderForNotasRelatorio(table);
+            notasRelatorio.writeTableDataForNotasRelatorio(table, datas);
+            document.add(table);
+
+            document.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public void relatorioDePostProfessores(HttpServletResponse response, DatasRecebeDTO datas) {
+        try {
+            Document document = new Document(PageSize.A4);
+            PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+            document.open();
+
+            mainHeader(document, writer);
+
+            // Adicionando o subtítulo
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            font.setSize(18);
+            font.setColor(Color.BLUE);
+            Paragraph p = new Paragraph("Relatório de Postagem Dos Professores", font);
+            p.setAlignment(Paragraph.ALIGN_CENTER);
+            document.add(p);
+
+            // Adicionando a tabela
+            PdfPTable table = new PdfPTable(5);
+            table.setWidthPercentage(100f);
+            table.setWidths(new float[]{2f, 2f, 2f, 2f, 2f});
+            table.setSpacingBefore(10);
+
+            postProfessoresRelatorio.writeTableHeaderForPostsRelatorio(table);
+            postProfessoresRelatorio.writeTableDataForPostsRelatorio(table, datas);
+            document.add(table);
+
+            document.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
+
+
+
+
+
+
+
+
