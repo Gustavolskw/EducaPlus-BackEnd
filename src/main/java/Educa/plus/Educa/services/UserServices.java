@@ -35,12 +35,17 @@ public class UserServices {
        return ResponseEntity.ok().body(new ResponseMessage("Usuario Cadastrado com sucesso"));
     }
 
-    public ResponseEntity AtualizaUsuario(AtualizaUsuarioDTO dados) {
-        var buscaUser = userRepository.econtrePorLogin(dados.login());
-        Usuario usuarioAlterado =  userRepository.getReferenceById(buscaUser.getId());
+    public ResponseEntity AtualizaUsuario(AtualizaUsuarioDTO dados, Long id) {
+        if(userRepository.findById(id).isEmpty()) return ResponseEntity.badRequest().body(new ExceptMessage("Usuario não encontrado!"));
+        Usuario usuarioAlterado =  userRepository.getReferenceById(id);
         if(!usuarioAlterado.getAtivo())return ResponseEntity.badRequest().body(new ExceptMessage("Usuario inativo!"));
-        String encryptedNewPassword = new BCryptPasswordEncoder().encode(dados.newSenha());
-        usuarioAlterado.updateUser(dados.login(), encryptedNewPassword);
+        if(dados.login() != null){
+            usuarioAlterado.setLogin(dados.login());
+        }
+        if(dados.newSenha() != null){
+            String encryptedNewPassword = new BCryptPasswordEncoder().encode(dados.newSenha());
+            usuarioAlterado.setSenha(encryptedNewPassword);
+        }
         return ResponseEntity.ok().body(new ResponseMessage("Usuario:"+ usuarioAlterado.getLogin()+" alterado com Sucesso"));
     }
 

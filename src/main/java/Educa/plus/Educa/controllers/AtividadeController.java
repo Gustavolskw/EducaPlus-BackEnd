@@ -17,7 +17,6 @@ public class AtividadeController {
     @Autowired
     private AtividadesServices atividadesServices;
 
-
     @GetMapping("/list")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity showAll(){

@@ -54,6 +54,19 @@ public class AutenticacaoController {
         var tokenJWT = tokenService.geradorToken((Usuario) authentication.getPrincipal());
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT, userId));
     }
+    @PostMapping("/update/login")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity efetuarTesteDeLoginUpdate(@RequestBody @Valid DadosAutenticacao dadosAutenticacaos) {
+        if(userRepository.findAll().isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Usuarios cadastrados!"));
+        if(userRepository.findByLogin(dadosAutenticacaos.login())==null)return ResponseEntity.badRequest().body(new ExceptMessage("Não Existem Usuarios cadastrados com esse nome!"));
+        if(userRepository.buscaDisponibilidadeDoUsuario(dadosAutenticacaos.login()) == 0)return ResponseEntity.badRequest().body(new ExceptMessage("Usuario Inativado"));
+        var Authenticationtoken = new UsernamePasswordAuthenticationToken(dadosAutenticacaos.login(),
+                dadosAutenticacaos.senha());
+        Long userId = userServices.getUserId(dadosAutenticacaos);
+        var authentication = manager.authenticate(Authenticationtoken);
+        var tokenJWT = tokenService.geradorToken((Usuario) authentication.getPrincipal());
+        return ResponseEntity.ok().body(new ResponseMessage("Usuario Autenticado!"));
+    }
 
     @PostMapping("/register")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -61,11 +74,11 @@ public class AutenticacaoController {
         return userServices.cadastraUsuario(data);
     }
 
-    @PutMapping("update")
+    @PutMapping("update/{id}")
     @Transactional
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity updateUser(@RequestBody @Valid AtualizaUsuarioDTO dados){
-        return userServices.AtualizaUsuario(dados);
+    public ResponseEntity updateUser(@RequestBody @Valid AtualizaUsuarioDTO dados, @PathVariable Long id ){
+        return userServices.AtualizaUsuario(dados, id);
     }
     @DeleteMapping("inativa/{id}")
     @Transactional

@@ -40,7 +40,7 @@ public class FeedbackController {
     @PutMapping("/update/{id}")
     @Transactional
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity removeFeedBack(@PathVariable String id ,@RequestBody UpdateFeedbackDTO data){
+    public ResponseEntity updateFeedback(@PathVariable String id ,@RequestBody UpdateFeedbackDTO data){
         return feedbackServices.updateFeedback(id, data);
     }
 }

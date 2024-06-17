@@ -19,12 +19,12 @@ public class RespostaController {
 
     @GetMapping("/{idAtividade}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity showAllRespostasFromAtividade(@PathVariable String idAtividade){
+    public ResponseEntity showAllRespostasBytividade(@PathVariable String idAtividade){
         return respostaService.ShowAllRespostaByAtividade(idAtividade);
     }
     @GetMapping("/all")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity showAllRespostasFromAtividade(){
+    public ResponseEntity showAllRespostas(){
         return respostaService.ShowAllRespostas();
     }
     @GetMapping("/prof/{professorId}")

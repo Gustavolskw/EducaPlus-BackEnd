@@ -29,7 +29,7 @@ public class MateriaController {
 
     @GetMapping("/{nome}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity seeAllMaterias(@PathVariable String nome ){
+    public ResponseEntity seeAllMateriasporNome(@PathVariable String nome ){
         return materiaServices.getMateriaPorNome(nome);
     }
 
