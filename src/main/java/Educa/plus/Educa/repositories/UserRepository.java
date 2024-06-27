@@ -1,6 +1,7 @@
 package Educa.plus.Educa.repositories;
 
 
+import Educa.plus.Educa.domain.materia.Materia;
 import Educa.plus.Educa.domain.usuario.RelatorioPostProfessores;
 import Educa.plus.Educa.domain.usuario.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -114,7 +115,5 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
     List<Object[]> relatorioDePostagens(@Param("diaInit")int diaInit, @Param("diaFinal")int diaFinal, @Param("mesInit") int mesInit, @Param("mesFinal") int mesFinal , @Param("ano")int ano);
 
 
-
-
-
+    List<Usuario> findByMateria(Materia materia);
 }

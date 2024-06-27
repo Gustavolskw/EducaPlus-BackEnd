@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface RespostaRepository extends JpaRepository<RespostaAtividade, String> {
     List<RespostaAtividade> findAllByAtividade(Atividades atividadeId);
@@ -29,4 +30,9 @@ public interface RespostaRepository extends JpaRepository<RespostaAtividade, Str
         "LEFT JOIN atividade_feita_notas atv_ft_nt ON atv_ft_nt.atividade_feita_id = atv_ft.id_atividade_feita\n" +
         "WHERE atv_ft_nt.nota IS NULL AND mat.id_materias = :materiaId")
     List<RespostaAtividade> buscaAtividadesDoProfessor(@Param("materiaId") Long materiaId);
+
+    List<RespostaAtividade>findByAtividade(Atividades atividade);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM atividades_feitas where alunos_id = :user AND atividades_id = :atividade")
+    RespostaAtividade findByDistinctAtividadeAndAluno(@Param("user") Long aluno, @Param("atividade") String atividade);
 }

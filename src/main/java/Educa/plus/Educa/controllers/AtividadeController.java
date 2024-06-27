@@ -23,18 +23,24 @@ public class AtividadeController {
         return atividadesServices.showAllAtividades();
     }
 
-
-    @GetMapping("/datas")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity showDatas(){
-        return atividadesServices.buscaDataDasAtividades();
-    }
-
     @GetMapping("/list/{id}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity showById(@PathVariable String id){
         return atividadesServices.showAtividadesPorId(id);
     }
+
+    @GetMapping("/list/done/{id}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public ResponseEntity showAllDoneByUser(@PathVariable Long id){
+        return atividadesServices.showAllAtividadesDoneByUser(id);
+    }
+
+    @GetMapping("/list/verification")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public Boolean retornaSeAtividadeDone(@RequestParam(name = "atv") String atividadeId, @RequestParam(name = "usr") Long id){
+        return atividadesServices.isAtividadeDone(atividadeId, id);
+    }
+
 
     @PostMapping("/add")
     @Transactional
@@ -56,5 +62,6 @@ public class AtividadeController {
     public ResponseEntity deleteAtividade(@PathVariable String id){
         return atividadesServices.removeAtividade(id);
     }
+
 
 }

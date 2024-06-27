@@ -54,6 +54,7 @@ public class MateriaServices {
     public ResponseEntity deleteMateria(Long materiaId){
         if(materiaRepository.findById(materiaId).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Materia não encontrada!"));
         Materia materia = materiaRepository.getReferenceById(materiaId);
+        if(!userRepository.findByMateria(materia).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Existem usuario Dependentes dessa materia!"));
         if(!atividadesRepository.findAllByMateria(materia).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("Materia Indicada possui Atividades!"));
         materiaRepository.deleteById(materiaId);
         return ResponseEntity.ok().body(new RespostaMateriasDTO(materia));
@@ -95,5 +96,14 @@ public class MateriaServices {
         if(user.getMateria() == null)return ResponseEntity.badRequest().body(new ExceptMessage("Usuario nao possui materias atreladas"));
         Materia materiaEncontrada = materiaRepository.getReferenceById(user.getMateria().getIdMaterias());
         return ResponseEntity.ok().body(new RespostaMateriasDTO(materiaEncontrada));
+    }
+
+    public ResponseEntity editaMateria(Long idMateria, String materiaNome) {
+        if(!materiaRepository.existsById(idMateria)) return ResponseEntity.badRequest().body(new ExceptMessage("Materia Inexistente"));
+        var materia = materiaRepository.getReferenceById(idMateria);
+        if(!materiaNome.isBlank()){
+            materia.setMateriaNome(materiaNome);
+        }
+        return ResponseEntity.ok().body(new ResponseMessage("Materia Editada com sucesso"));
     }
 }

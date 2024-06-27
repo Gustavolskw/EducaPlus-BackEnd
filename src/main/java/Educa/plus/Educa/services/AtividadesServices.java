@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AtividadesServices {
@@ -132,5 +133,23 @@ public class AtividadesServices {
     }
 
 
+    public ResponseEntity showAllAtividadesDoneByUser(Long userId) {
+        if(professorRepository.findById(userId).isEmpty())return ResponseEntity.badRequest().body(new ExceptMessage("usuario não encontrado!"));
+        List<String> listaDeAtividades = atividadesRepository.listaDeAtividadesQueUsuarioFez(userId).stream().toList();
+        return ResponseEntity.ok().body(listaDeAtividades);
+    }
+
+    public Boolean isAtividadeDone(String atividadeId, Long id) {
+        if(professorRepository.findById(id).isEmpty())return false;
+        if(atividadesRepository.findById(atividadeId).isEmpty())return false;
+        Atividades atividade = atividadesRepository.getReferenceById(atividadeId);
+        if(respostaRepository.findByAtividade(atividade).isEmpty())return false;
+        if(respostaRepository.findByDistinctAtividadeAndAluno(id, atividadeId)!=null){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 }
 

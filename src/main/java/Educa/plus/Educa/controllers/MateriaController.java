@@ -64,6 +64,13 @@ public class MateriaController {
         return materiaServices.deleteMateria(idMateria);
     }
 
+    @PutMapping("update/{idMateria}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @Transactional
+    public ResponseEntity deletaMatria(@PathVariable Long idMateria, @RequestBody @Valid String materiaNome ){
+        return materiaServices.editaMateria(idMateria, materiaNome);
+    }
+
 
 
 }

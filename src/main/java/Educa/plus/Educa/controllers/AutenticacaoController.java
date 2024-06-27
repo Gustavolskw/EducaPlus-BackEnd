@@ -54,6 +54,13 @@ public class AutenticacaoController {
         var tokenJWT = tokenService.geradorToken((Usuario) authentication.getPrincipal());
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT, userId));
     }
+
+
+
+
+
+
+
     @PostMapping("/update/login")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity efetuarTesteDeLoginUpdate(@RequestBody @Valid DadosAutenticacao dadosAutenticacaos) {
